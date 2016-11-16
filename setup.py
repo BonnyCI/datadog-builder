@@ -1,53 +1,28 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# Copyright (c) 2013 Hewlett-Packard Development Company, L.P.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-from setuptools import setup
+import setuptools
 
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
+# In python < 2.7.4, a lazy loading of package `pbr` will break
+# setuptools if some other modules registered functions in `atexit`.
+# solution from: http://bugs.python.org/issue15881#msg170215
+try:
+    import multiprocessing  # noqa
+except ImportError:
+    pass
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
-
-requirements = [
-    # TODO: put package requirements here
-]
-
-test_requirements = [
-    # TODO: put package test requirements here
-]
-
-setup(
-    name='datadog_builder',
-    version='0.1.0',
-    description="Build and manage datadog monitors. ",
-    long_description=readme + '\n\n' + history,
-    author="Jamie Lennox",
-    author_email='jamielennox@gmail.com',
-    url='https://github.com/jamielennox/datadog_builder',
-    packages=[
-        'datadog_builder',
-    ],
-    package_dir={'datadog_builder':
-                 'datadog_builder'},
-    include_package_data=True,
-    install_requires=requirements,
-    license="Apache Software License 2.0",
-    zip_safe=False,
-    keywords='datadog_builder',
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Apache Software License',
-        'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-    ],
-    test_suite='tests',
-    tests_require=test_requirements
-)
+setuptools.setup(
+    setup_requires=['pbr'],
+    pbr=True)
