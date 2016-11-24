@@ -11,9 +11,7 @@
 # under the License.
 
 import argparse
-import copy
 import logging
-from pprint import pprint
 import sys
 
 from datadog_builder import init

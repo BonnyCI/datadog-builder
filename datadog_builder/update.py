@@ -17,8 +17,6 @@ import datadog
 from datadog_builder import common
 from datadog_builder import constants
 
-from pprint import pprint
-
 LOG = logging.getLogger(__name__)
 
 
@@ -107,7 +105,7 @@ def _update_monitor(args, up_monitor, my_monitor):
             changes[k] = v
 
     if changes:
-        up_monitor['changed'] =  ", ".join(changes.keys())
+        up_monitor['changed'] = ", ".join(changes.keys())
         LOG.info("Updating %(name)s because %(changed)s changed", up_monitor)
 
         if args.dry_run:
