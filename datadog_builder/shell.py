@@ -27,17 +27,11 @@ LOG = logging.getLogger(__name__)
 def main(argv=sys.argv[1:]):
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--auth-config',
-                        dest='auth_config',
-                        # required=True,
-                        type=argparse.FileType('r'),
-                        help='Authentication Information')
-
     parser.add_argument('--config',
                         dest='config',
                         # required=True,
                         type=argparse.FileType('r'),
-                        help='Job information')
+                        help='Authentication Information')
 
     subparsers = parser.add_subparsers()
 

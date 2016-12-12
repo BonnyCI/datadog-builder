@@ -10,7 +10,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import argparse
 import copy
+
 import datadog
 import yaml
 
@@ -55,3 +57,15 @@ def load_config(args):
 def initialize(args):
     auth_options = yaml.safe_load(args.auth_config)
     datadog.initialize(**auth_options)
+
+
+def create_subcommand(subparsers, command, func, add_config=True, **kwargs):
+    parser = subparsers.add_parser(command, **kwargs)
+    parser.set_defaults(func=func)
+
+    if add_config:
+        parser.add_argument('config',
+                            type=argparse.FileType('r'),
+                            help='Job information')
+
+    return parser

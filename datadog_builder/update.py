@@ -21,8 +21,10 @@ LOG = logging.getLogger(__name__)
 
 
 def add_arguments(subparsers):
-    parser = subparsers.add_parser('update', help='Update datadog monitors')
-    parser.set_defaults(func=update_command)
+    parser = common.create_subcommand(subparsers,
+                                      'update',
+                                      update_command,
+                                      help='Update datadog monitors')
 
     parser.add_argument('-n', '--dry-run',
                         action='store_true',

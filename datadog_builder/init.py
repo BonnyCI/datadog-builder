@@ -19,11 +19,10 @@ from datadog_builder import schema
 
 
 def add_arguments(subparsers):
-    parser = subparsers.add_parser(
-        'init',
-        help='Dump the current state of all monitors.')
-
-    parser.set_defaults(func=init_command)
+    common.create_subcommand(subparsers,
+                             'init',
+                             init_command,
+                             help='Dump the current state of all monitors.')
 
 
 def _render_monitor(monitor):
