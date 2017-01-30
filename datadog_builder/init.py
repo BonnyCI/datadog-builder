@@ -22,6 +22,7 @@ def add_arguments(subparsers):
     common.create_subcommand(subparsers,
                              'init',
                              init_command,
+                             add_config=False,
                              help='Dump the current state of all monitors.')
 
 
