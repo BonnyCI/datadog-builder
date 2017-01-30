@@ -28,7 +28,7 @@ def main(argv=sys.argv[1:]):
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--config',
-                        dest='config',
+                        dest='auth_config',
                         # required=True,
                         type=argparse.FileType('r'),
                         help='Authentication Information')
