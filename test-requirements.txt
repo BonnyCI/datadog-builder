@@ -4,6 +4,7 @@
 
 hacking>=0.11.0,<0.12 # Apache-2.0
 
+betamax
 coverage>=3.6 # Apache-2.0
 python-subunit>=0.0.18 # Apache-2.0/BSD
 requests-mock[fixture]

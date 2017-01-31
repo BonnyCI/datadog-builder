@@ -10,24 +10,15 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import requests_mock
-from requests_mock.contrib import fixture as requests_mock_fixture
+import logging
 
-from datadog_builder import client
-from datadog_builder.tests import base
-
-# requests-mock bug #1584008: do all matching as case sensitive
-requests_mock.mock.case_sensitive = True
+import fixtures
+import testtools
 
 
-class TestCase(base.TestCase):
+class TestCase(testtools.TestCase):
 
     def setUp(self):
         super(TestCase, self).setUp()
 
-        self.requests_mock = self.useFixture(requests_mock_fixture.Fixture())
-
-    @staticmethod
-    def _url(*args):
-        return "/".join([client.DataDogClient.API_HOST, 'api/v1'] +
-                        [a.strip('/') for a in args])
+        self.logger = self.useFixture(fixtures.FakeLogger(level=logging.DEBUG))

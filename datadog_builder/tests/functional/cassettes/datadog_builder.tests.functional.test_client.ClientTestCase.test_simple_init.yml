@@ -1,0 +1,41 @@
+http_interactions:
+- recorded_at: '2017-01-31T06:05:31'
+  request:
+    body:
+      encoding: utf-8
+      string: ''
+    headers:
+      Accept: application/json
+      Accept-Encoding: gzip, deflate
+      Connection: keep-alive
+      User-Agent: datadog-builder/0.0.1 python-requests/2.13.0 CPython/2.7.12
+    method: GET
+    uri: https://app.datadoghq.com/api/v1/monitor?application_key=<DATADOG_APP_KEY>&api_key=<DATADOG_API_KEY>
+  response:
+    body:
+      base64_string: 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
+      encoding: null
+      string: ''
+    headers:
+      Cache-Control: no-cache
+      Connection: keep-alive
+      Content-Encoding: gzip
+      Content-Type: application/json
+      DD-POOL: dogweb_sameorig
+      Date: Tue, 31 Jan 2017 06:05:30 GMT
+      Pragma: no-cache
+      Set-Cookie: DD-PSHARD=6; expires="Tue, 07-Feb-2017 06:05:30 GMT"; Max-Age=604800;
+        Path=/
+      Strict-Transport-Security: max-age=15724800;
+      Vary: Accept-Encoding
+      X-Content-Type-Options: nosniff
+      X-DD-Debug: TyFviDs9fHzB3+9bXt40KYrgv8bDPk+b8wYtDZx2Yr4yUu3MnksfdcH+kH/Tjpdr
+      X-DD-VERSION: '34.34302'
+      X-Frame-Options: SAMEORIGIN
+      etag: W/"86636980550215e76dc28e77dff1eaae"
+      transfer-encoding: chunked
+    status:
+      code: 200
+      message: OK
+    url: https://app.datadoghq.com/api/v1/monitor?application_key=<DATADOG_APP_KEY>&api_key=<DATADOG_API_KEY>
+recorded_with: betamax/0.8.0
