@@ -6,6 +6,7 @@ hacking>=0.11.0,<0.12 # Apache-2.0
 
 coverage>=3.6 # Apache-2.0
 python-subunit>=0.0.18 # Apache-2.0/BSD
+requests-mock[fixture]
 sphinx>=1.2.1,!=1.3b1,<1.4 # BSD
 testrepository>=0.0.18 # Apache-2.0/BSD
 testscenarios>=0.4 # Apache-2.0/BSD
