@@ -10,7 +10,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from datadog_builder import version
+import pbr.version
 
-
-__version__ = version.version_string
+version_string = pbr.version.VersionInfo('datadog-builder').version_string()

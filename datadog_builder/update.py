@@ -12,8 +12,7 @@
 
 import logging
 
-import datadog
-
+from datadog_builder import client
 from datadog_builder import common
 from datadog_builder import constants
 
@@ -38,10 +37,11 @@ def add_arguments(subparsers):
 
 
 def update_command(args):
-    common.initialize(args)
+    c = client.DataDogClient.from_file(args.auth_config)
+
     config = common.load_config(args)
 
-    up_monitors = datadog.api.Monitor.get_all(monitor_tags=[constants.TAG])
+    up_monitors = c.list_monitors(params={'monitor_tags': [constants.TAG]})
     up_monitors = {m['name'].strip(): m for m in up_monitors}
 
     for my_monitor in config.get('monitors', []):
@@ -52,14 +52,14 @@ def update_command(args):
         try:
             up_monitor = up_monitors.pop(name)
         except KeyError:
-            _create_monitor(args, my_monitor)
+            _create_monitor(client, args, my_monitor)
         else:
-            _update_monitor(args, up_monitor, my_monitor)
+            _update_monitor(client, args, up_monitor, my_monitor)
 
     # anything left at this point is upstream but not in our file
     if args.delete:
         for up_monitor in up_monitors.values():
-            _delete_monitor(args, up_monitor)
+            _delete_monitor(client, args, up_monitor)
 
 
 def _cleanup_monitor(monitor):
@@ -73,17 +73,17 @@ def _cleanup_monitor(monitor):
     return monitor
 
 
-def _create_monitor(args, monitor):
+def _create_monitor(client, args, monitor):
     LOG.info("Creating new monitor: %(name)s", monitor)
     monitor.setdefault('tags', []).append(constants.TAG)
 
     if args.dry_run:
         LOG.warn("Create new monitor %(name)s", monitor)
     else:
-        datadog.api.Monitor.create(**monitor)
+        client.create_monitor(monitor)
 
 
-def _update_monitor(args, up_monitor, my_monitor):
+def _update_monitor(client, args, up_monitor, my_monitor):
     changes = {}
 
     # handle tags
@@ -113,16 +113,16 @@ def _update_monitor(args, up_monitor, my_monitor):
         if args.dry_run:
             LOG.warn("Updating monitor %(name)s from changed keys", up_monitor)
         else:
-            datadog.api.Monitor.update(up_monitor['id'], **changes)
+            client.update_monitor(up_monitor['id'], changes)
 
     else:
         LOG.debug("No changes to monitor %(name)s id: %(id)s", up_monitor)
 
 
-def _delete_monitor(args, monitor):
+def _delete_monitor(client, args, monitor):
     LOG.info("Deleting not found: %(name)s", monitor)
 
     if args.dry_run:
         LOG.warn('Deleting monitor %(id)s: %(name)s', monitor)
     else:
-        datadog.api.Monitor.delete(monitor['id'])
+        client.delete_monitor(monitor['id'])

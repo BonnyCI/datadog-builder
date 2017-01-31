@@ -4,6 +4,5 @@
 
 pbr>=1.6 # Apache-2.0
 
-datadog
 jsonschema
 PyYAML>=3.10.0  # MIT

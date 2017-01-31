@@ -10,16 +10,14 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import argparse
-
 from datadog_builder import common
 
 
 def add_arguments(subparsers):
-    parser = common.create_subcommand(subparsers,
-                                      'validate',
-                                      validate_command,
-                                      help='Validate config files')
+    common.create_subcommand(subparsers,
+                             'validate',
+                             validate_command,
+                             help='Validate config files')
 
 
 def validate_command(args):
