@@ -10,7 +10,15 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from datadog_builder import version
+import logging
+
+import fixtures
+import testtools
 
 
-__version__ = version.version_string
+class TestCase(testtools.TestCase):
+
+    def setUp(self):
+        super(TestCase, self).setUp()
+
+        self.logger = self.useFixture(fixtures.FakeLogger(level=logging.DEBUG))

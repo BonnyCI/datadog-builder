@@ -10,9 +10,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import datadog
 import yaml
 
+from datadog_builder import client
 from datadog_builder import common
 from datadog_builder import constants
 from datadog_builder import schema
@@ -45,10 +45,13 @@ def _render_monitor(monitor):
 
 
 def init_command(args):
-    common.initialize(args)
+    c = client.DataDogClient.from_file(args.auth_config)
 
-    monitors = [_render_monitor(m) for m in datadog.api.Monitor.get_all()]
+    monitors = [_render_monitor(m) for m in c.list_monitors()]
 
     output = {'monitors': monitors}
 
-    print(yaml.dump(output, indent=2, default_flow_style=False))
+    print(yaml.safe_dump(output,
+                         indent=2,
+                         default_flow_style=False,
+                         allow_unicode=True))

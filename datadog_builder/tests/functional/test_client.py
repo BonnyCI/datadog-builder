@@ -10,7 +10,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from datadog_builder import version
+from datadog_builder.tests.functional import base
 
 
-__version__ = version.version_string
+class ClientTestCase(base.TestCase):
+
+    def test_simple_init(self):
+        self.client.list_monitors()

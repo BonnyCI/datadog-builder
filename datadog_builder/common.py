@@ -13,7 +13,6 @@
 import argparse
 import copy
 
-import datadog
 import yaml
 
 from datadog_builder import schema
@@ -52,11 +51,6 @@ def load_config(args):
 
     schema.validate(output)
     return output
-
-
-def initialize(args):
-    auth_options = yaml.safe_load(args.auth_config)
-    datadog.initialize(**auth_options)
 
 
 def create_subcommand(subparsers, command, func, add_config=True, **kwargs):
