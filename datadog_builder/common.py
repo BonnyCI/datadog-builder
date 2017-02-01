@@ -27,10 +27,10 @@ def _recursive_merge(a, b, path=None):
         if key in a:
             if isinstance(a[key], dict) and isinstance(b[key], dict):
                 _recursive_merge(a[key], b[key], path + [str(key)])
-            elif a[key] == b[key]:
-                pass  # same leaf value
+            elif isinstance(a[key], dict) or isinstance(b[key], dict):
+                raise Exception("Can't merge dictionary and not dictionary")
             else:
-                raise Exception('Conflict at %s' % '.'.join(path + [str(key)]))
+                a[key] = b[key]
         else:
             a[key] = b[key]
 
