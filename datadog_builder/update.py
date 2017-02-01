@@ -52,14 +52,14 @@ def update_command(args):
         try:
             up_monitor = up_monitors.pop(name)
         except KeyError:
-            _create_monitor(client, args, my_monitor)
+            _create_monitor(c, args, my_monitor)
         else:
-            _update_monitor(client, args, up_monitor, my_monitor)
+            _update_monitor(c, args, up_monitor, my_monitor)
 
     # anything left at this point is upstream but not in our file
     if args.delete:
         for up_monitor in up_monitors.values():
-            _delete_monitor(client, args, up_monitor)
+            _delete_monitor(c, args, up_monitor)
 
 
 def _cleanup_monitor(monitor):
