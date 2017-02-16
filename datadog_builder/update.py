@@ -16,6 +16,8 @@ from datadog_builder import client
 from datadog_builder import common
 from datadog_builder import constants
 
+from requests import HTTPError
+
 LOG = logging.getLogger(__name__)
 
 
@@ -80,7 +82,10 @@ def _create_monitor(client, args, monitor):
     if args.dry_run:
         LOG.warn("Create new monitor %(name)s", monitor)
     else:
-        client.create_monitor(monitor)
+        try:
+            client.create_monitor(monitor)
+        except HTTPError:
+            LOG.exception("Monitor %(name)s failed to create", monitor)
 
 
 def _update_monitor(client, args, up_monitor, my_monitor):
@@ -113,7 +118,10 @@ def _update_monitor(client, args, up_monitor, my_monitor):
         if args.dry_run:
             LOG.warn("Updating monitor %(name)s from changed keys", up_monitor)
         else:
-            client.update_monitor(up_monitor['id'], changes)
+            try:
+                client.update_monitor(up_monitor['id'], changes)
+            except HTTPError:
+                LOG.exception("Monitor %(name)s failed to update", up_monitor)
 
     else:
         LOG.debug("No changes to monitor %(name)s id: %(id)s", up_monitor)
