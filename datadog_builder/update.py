@@ -84,8 +84,9 @@ def _create_monitor(client, args, monitor):
     else:
         try:
             client.create_monitor(monitor)
-        except HTTPError:
+        except HTTPError as exc:
             LOG.exception("Monitor %(name)s failed to create", monitor)
+            LOG.error("Response body: %(body)s", exc.response.text)
 
 
 def _update_monitor(client, args, up_monitor, my_monitor):
@@ -120,8 +121,9 @@ def _update_monitor(client, args, up_monitor, my_monitor):
         else:
             try:
                 client.update_monitor(up_monitor['id'], changes)
-            except HTTPError:
+            except HTTPError as exc:
                 LOG.exception("Monitor %(name)s failed to update", up_monitor)
+                LOG.error("Response body: %(body)s", exc.response.text)
 
     else:
         LOG.debug("No changes to monitor %(name)s id: %(id)s", up_monitor)
