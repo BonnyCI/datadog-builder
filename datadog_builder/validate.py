@@ -10,15 +10,51 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from datadog_builder import common
+import logging
 
+from datadog_builder import common
+from datadog_builder import client
+
+from uuid import uuid4
+
+LOG = logging.getLogger(__name__)
 
 def add_arguments(subparsers):
-    common.create_subcommand(subparsers,
-                             'validate',
-                             validate_command,
-                             help='Validate config files')
+    parser = common.create_subcommand(subparsers,
+                                      'validate',
+                                      validate_command,
+                                      help='Validate config files')
+
+    parser.add_argument('--round-trip',
+                        action='store_true',
+                        dest='round_trip',
+                        help="Create/Delete test monitor for datadog validation")
 
 
 def validate_command(args):
-    common.load_config(args)
+    config = common.load_config(args)
+
+    if args.round_trip:
+        c = client.DataDogClient.from_file(args.auth_config)
+
+        for my_monitor in config.get('monitors', []):
+            name = my_monitor['name']
+            my_monitor['name'] = "{}-{}".format(uuid4(), name)
+
+            my_monitor['id'] = _create_test_monitor(c, args, my_monitor)
+            _delete_test_monitor(c, args, my_monitor)
+
+
+def _create_test_monitor(client, args, monitor):
+    LOG.info("Testing new monitor: %(name)s", monitor)
+    try:
+        return client.create_monitor(monitor)
+    except HTTPError as exc:
+        # Handle test failure here
+        LOG.exception("Monitor %(name)s failed to create", monitor)
+        LOG.error("Response body: %s", exc.response.text)
+
+
+def _delete_test_monitor(client, args, monitor):
+    LOG.info("Deleting test monitor: %(name)s", monitor)
+    client.delete_monitor(monitor['id'])
