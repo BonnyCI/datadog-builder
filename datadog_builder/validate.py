@@ -12,12 +12,14 @@
 
 import logging
 
-from datadog_builder import common
 from datadog_builder import client
+from datadog_builder import common
 
+from requests import HTTPError
 from uuid import uuid4
 
 LOG = logging.getLogger(__name__)
+
 
 def add_arguments(subparsers):
     parser = common.create_subcommand(subparsers,
@@ -28,7 +30,7 @@ def add_arguments(subparsers):
     parser.add_argument('--round-trip',
                         action='store_true',
                         dest='round_trip',
-                        help="Create/Delete test monitor for datadog validation")
+                        help="Round-trip to datadog to validate monitors")
 
 
 def validate_command(args):
@@ -37,24 +39,21 @@ def validate_command(args):
     if args.round_trip:
         c = client.DataDogClient.from_file(args.auth_config)
 
-        for my_monitor in config.get('monitors', []):
-            name = my_monitor['name']
-            my_monitor['name'] = "{}-{}".format(uuid4(), name)
+        for monitor in config.get('monitors', []):
+            monitor_name = monitor['name']
+            monitor['name'] = "{}-{}".format(uuid4(), monitor_name)
 
-            my_monitor['id'] = _create_test_monitor(c, args, my_monitor)
-            _delete_test_monitor(c, args, my_monitor)
-
-
-def _create_test_monitor(client, args, monitor):
-    LOG.info("Testing new monitor: %(name)s", monitor)
-    try:
-        return client.create_monitor(monitor)
-    except HTTPError as exc:
-        # Handle test failure here
-        LOG.exception("Monitor %(name)s failed to create", monitor)
-        LOG.error("Response body: %s", exc.response.text)
-
-
-def _delete_test_monitor(client, args, monitor):
-    LOG.info("Deleting test monitor: %(name)s", monitor)
-    client.delete_monitor(monitor['id'])
+            monitor_id = None
+            try:
+                LOG.debug("Creating test monitor: %(name)s", monitor)
+                monitor_id = c.create_monitor(monitor)
+            except HTTPError as exc:
+                # Handle test failure here
+                LOG.error("Monitor \"%s\" failed to round-trip validate",
+                          monitor_name)
+                LOG.error("Response body: %s", exc.response.text)
+            else:
+                LOG.info("Monitor \"%s\" round-trip validated successfully!",
+                         monitor_name)
+                LOG.debug("Deleting test monitor: %(name)s", monitor)
+                c.delete_monitor(monitor_id)

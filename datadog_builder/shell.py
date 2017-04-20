@@ -62,7 +62,7 @@ def main(argv=sys.argv[1:]):
         logging.config.dictConfig(logging_config)
 
     else:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.INFO)
 
     LOG.debug("Starting Up")
     args.func(args)
