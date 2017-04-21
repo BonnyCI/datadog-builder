@@ -130,7 +130,13 @@ class DataDogClient(object):
         return self.request('DELETE', path, **kwargs)
 
     def create_monitor(self, monitor, **kwargs):
-        self.post('/monitor', json=monitor, **kwargs)
+        r = self.post('/monitor', json=monitor, **kwargs)
+        r.raise_for_status()
+        try:
+            res = r.json()
+        except ValueError:
+            return None
+        return res.get('id', None)
 
     def list_monitors(self, **kwargs):
         return self.get('/monitor', **kwargs).json()
